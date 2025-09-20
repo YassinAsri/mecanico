@@ -1,0 +1,170 @@
+<div>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+      /* Set the background color for the entire body to a softer gray */
+      body {
+        background-color: #f8f8f8; /* Softer gray background color */
+        font-family: 'Poppins', sans-serif; /* Apply the "Poppins" font to the body */
+        font-size: 16px; /* Base font size for the body */
+      }
+
+      /* Style for the div */
+      .invoice-container {
+        width: 800px;
+        background-color: white; /* Background color of the div */
+        border: 1px solid black; /* Soft, gray border */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px; /* Optional: add padding inside the div */
+      }
+
+      /* Add space between rows */
+      table {
+        width: 100%; /* Ensure the table takes full width */
+        border-spacing: 0; /* Remove spacing between rows and columns */
+        border-collapse: collapse; /* Collapse the borders between cells */
+      }
+
+      /* Apply the bottom border only to the first and second row's cells */
+      table tr:first-child td, table tr:nth-child(2) td {
+        border-bottom: 1px solid black; /* Gray bottom border for the first and second row's cells */
+      }
+
+      table td {
+        padding: 15px; /* Optional: add padding inside the table cells */
+        font-size: 14px; /* Font size for the table content */
+      }
+
+      /* Increase the font size for the word 'Invoice' only */
+      .invoice-header {
+        font-size: 24px; /* Font size for "Invoice" */
+        font-weight: 700; /* Bold text */
+      }
+
+      /* Add gray background to the header of the second table */
+      table thead {
+        background-color: #f8f9fa !important;
+      }
+
+      /* Style for the header cells */
+      table thead td {
+        font-weight: bold; /* Make header text bold */
+        font-size: 16px; /* Font size for the header cells */
+      }
+
+      /* Font size for the footer or additional text (if any) */
+      .footer-text {
+        font-size: 12px; /* Example font size for any footer text */
+        color: #888; /* Light gray color for footer text */
+      }
+
+      /* Add only the outer border for the second table */
+      .invoice-table {
+        border: 1px solid black; /* Outer border for the entire second table */
+      }
+
+      /* Remove the inner borders from the table cells */
+      .invoice-table td {
+        border: none; /* No inner borders */
+      }
+
+      /* Style for the Aarbeidsloon row to match the <thead> cells */
+      .aarbeidsloon-row td {
+        background-color: #f8f9fa;
+        font-weight: bold; /* Make the text bold */
+        font-size: 16px; /* Match the font size */
+        border-top: 1px solid black; /* Add a top border for the Aarbeidsloon rows */
+        border-bottom: 1px solid black; /* Add a bottom border for the Aarbeidsloon rows */
+      }
+
+      /* Remove bold styling from the last cell in Aarbeidsloon row */
+      .aarbeidsloon-row td:last-child {
+        font-weight: normal; /* Make the text normal (not bold) */
+      }
+
+     @media print {
+        footer {
+          display: none; /* Hide the print button in print view */
+        }
+
+        /* Ensure background colors are printed */
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+
+    </style>
+    
+    
+  </head>
+  <body>
+    <center>
+      <br>
+      <!-- Applying the CSS class to the div -->
+      <div  id = "data" class="invoice-container">
+        <table>
+          <tr>
+            <td align="left"><b class="invoice-header">S&A Car Control</b></td>
+            <td align="right"><b class="invoice-header">Factuur</b></td> <!-- "Invoice" will have a larger font size -->
+          </tr>
+          <tr>
+            <td align="left"><b>Datum</b>: $DATE</td>
+            <td align="right"><b>Factuurnr:</b> $INV_NR</td>
+          </tr>
+          <tr>
+            <td align="left" valign = top><b>KLANT:</b><br> $CLIENT_NAME <br> $CLIENT_ADDRESS <br> $CLIENT_PC</td>
+            <td align="right" valign= top>
+                <b>S&A Car Control </b><br> Den Brielstraat 25 <br> 1055 RV Amsterdam <br>
+                KvK: 34195597<br>BTW-nr: NL8172.95.033.B01<br>IBAN: NL 67 INGB 0002664374<br>Tel nr: 020 486 56 25</td><br>Mobiel nr: 06 145 553 28</td>
+          </tr>
+        </table>
+
+        <br>
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <td><strong>Referentie</strong></td>
+              <td><strong>Omschrijving</strong></td>
+              <td><strong>Aantal</strong></td>
+              <td><strong>Prijs</strong></td>
+              <td align="right"><strong>Subtotaal</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            $INV_REF
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>Aarbeidsloon</b></td>
+              <td align="right">€ $LOON</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>Subtotaal</b></td>
+              <td align="right">€ $SUBTOTAL</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>BTW</b></td>
+              <td align="right">% $BTW_PERC</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>BTW Bedrag</b></td>
+              <td align="right">€ $BTW_AMOUNT</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>Totaal</b></td>
+              <td align="right"><b>€ $TOTAL</b></td>
+            </tr>
+          </tbody>
+        </table>
+        <footer>
+    <div> 
+        <a href="javascript:void(0);" onclick="window.print()">Print & Download</a> 
+    </div>
+</footer>
+      </div>
+    </center>
+  </body>
+</html>
+<div>

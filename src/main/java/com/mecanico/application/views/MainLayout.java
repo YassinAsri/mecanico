@@ -14,14 +14,18 @@ import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.util.List;
+import org.springframework.context.annotation.Scope;
 
 /**
  * The main view is a top-level placeholder for other views.
  */
 @Layout
 @AnonymousAllowed
+@Scope("prototype")
+@VaadinSessionScope
 public class MainLayout extends AppLayout {
 
     private H1 viewTitle;

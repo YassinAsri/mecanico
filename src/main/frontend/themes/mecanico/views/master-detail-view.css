@@ -1,0 +1,78 @@
+.master-detail-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.master-detail-view vaadin-split-layout {
+  width: 100%;
+  height: 100%;
+}
+
+.master-detail-view vaadin-grid {
+  height: 100%;
+}
+
+.master-detail-view .editor-layout {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.master-detail-view .editor {
+  flex-grow: 1;
+  padding: var(--lumo-space-l);
+}
+
+.master-detail-view .editor vaadin-checkbox {
+  padding-top: var(--lumo-space-m);
+}
+
+.master-detail-view .button-layout {
+  width: 100%;
+  flex-wrap: wrap;
+  background-color: var(--lumo-contrast-5pct);
+  padding-bottom: var(--lumo-space-s);
+  padding-top: var(--lumo-space-s);
+  padding-left: var(--lumo-space-l);
+  padding-right: var(--lumo-space-l);
+  gap: var(--lumo-space-m);
+}
+
+.master-detail-view .grid-wrapper {
+  width: 100%;
+}
+
+
+.master-detail-view .grid-wrapper vaadin-text-field {
+    width: 100%;
+    max-width: 300px;  /* Adjust the width of the filter input */
+    margin-bottom: var(--lumo-space-l); /* Space below the search field */
+    padding: var(--lumo-space-s);
+    border-radius: var(--lumo-border-radius-s);
+    font-size: var(--lumo-font-size-m);
+    background-color: var(--lumo-base-color);
+    box-shadow: var(--lumo-shade-20pct);
+}
+
+/* Add some padding and space for the search icon inside the filter input */
+.master-detail-view .grid-wrapper vaadin-text-field::part(input-field) {
+    padding-left: 32px; /* Add space for the search icon */
+}
+
+/* Styling for the clear button within the filter field */
+.master-detail-view .grid-wrapper vaadin-text-field::part(clear-button) {
+    color: var(--lumo-contrast-30pct);
+}
+
+/* Add a search icon for the filter field */
+.master-detail-view .grid-wrapper vaadin-text-field::part(prefix) {
+    font-size: var(--lumo-font-size-l);
+    color: var(--lumo-contrast-50pct);
+    margin-left: var(--lumo-space-s);
+}
+
+/* Style the text color of the filter input */
+.master-detail-view .grid-wrapper vaadin-text-field::part(input-field) {
+    color: var(--lumo-primary-text-color);
+}

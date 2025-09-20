@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/project/94fa9606-a12d-4d2f-af69-41ca43dc4c71 -->
     <groupId>com.mecanico.application</groupId>
@@ -20,6 +20,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.1</version>
     </parent>
+    
 
     <repositories>
         <repository>
@@ -54,6 +55,10 @@
             <artifactId>vaadin-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.parttio</groupId>
             <artifactId>line-awesome</artifactId>
             <version>2.1.0</version>
@@ -63,6 +68,19 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
 
         <dependency>
@@ -79,6 +97,19 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.14.2</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -110,20 +141,20 @@
                         </eclipse>
                     </java>
                     <!-- Uncomment to format TypeScript files 
-                        <typescript>
-                        <includes>
-                            <include>src/main/frontend/**/*.ts</include>
-                            <include>src/main/frontend/**/*.tsx</include>
-                        </includes>
-                        <excludes>
-                            <exclude>src/main/frontend/generated/**</exclude>
-                        </excludes>
-                        <prettier>
-                            <prettierVersion>3.3.3</prettierVersion>
-                            <configFile>.prettierrc.json</configFile>
-                        </prettier>
-                    </typescript>
-                -->
+                            <typescript>
+                            <includes>
+                                <include>src/main/frontend/**/*.ts</include>
+                                <include>src/main/frontend/**/*.tsx</include>
+                            </includes>
+                            <excludes>
+                                <exclude>src/main/frontend/generated/**</exclude>
+                            </excludes>
+                            <prettier>
+                                <prettierVersion>3.3.3</prettierVersion>
+                                <configFile>.prettierrc.json</configFile>
+                            </prettier>
+                        </typescript>
+                    -->
                 </configuration>
             </plugin>
             <plugin>

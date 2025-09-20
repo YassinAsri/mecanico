@@ -1,0 +1,190 @@
+<div>
+<html>
+  <head>
+    <!-- Link to Google Fonts for the "Poppins" font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+      /* Set the background color for the entire body to a softer gray */
+      body {
+        background-color: #f8f8f8; /* Softer gray background color */
+        font-family: 'Poppins', sans-serif; /* Apply the "Poppins" font to the body */
+        font-size: 16px; /* Base font size for the body */
+      }
+
+      /* Style for the div */
+      .invoice-container {
+        width: 800px;
+        background-color: white; /* Background color of the div */
+        border: 1px solid #d0d0d0; /* Soft, gray border */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px; /* Optional: add padding inside the div */
+      }
+
+      /* Add space between rows */
+      table {
+        width: 100%; /* Ensure the table takes full width */
+        border-spacing: 0; /* Remove spacing between rows and columns */
+        border-collapse: collapse; /* Collapse the borders between cells */
+      }
+
+      /* Apply the bottom border only to the first and second row's cells */
+      table tr:first-child td, table tr:nth-child(2) td {
+        border-bottom: 1px solid #d0d0d0; /* Gray bottom border for the first and second row's cells */
+      }
+
+      table td {
+        padding: 15px; /* Optional: add padding inside the table cells */
+        font-size: 14px; /* Font size for the table content */
+      }
+
+      /* Increase the font size for the word 'Invoice' only */
+      .invoice-header {
+        font-size: 24px; /* Font size for "Invoice" */
+        font-weight: 700; /* Bold text */
+      }
+
+      /* Add gray background to the header of the second table */
+      table thead {
+        background-color: #f8f9fa !important;
+      }
+
+      /* Style for the header cells */
+      table thead td {
+        font-weight: bold; /* Make header text bold */
+        font-size: 16px; /* Font size for the header cells */
+      }
+
+      /* Font size for the footer or additional text (if any) */
+      .footer-text {
+        font-size: 12px; /* Example font size for any footer text */
+        color: #888; /* Light gray color for footer text */
+      }
+
+      /* Add only the outer border for the second table */
+      .invoice-table {
+        border: 1px solid #d0d0d0; /* Outer border for the entire second table */
+      }
+
+      /* Remove the inner borders from the table cells */
+      .invoice-table td {
+        border: none; /* No inner borders */
+      }
+
+      /* Style for the Aarbeidsloon row to match the <thead> cells */
+      .aarbeidsloon-row td {
+        background-color: #f8f9fa;
+        font-weight: bold; /* Make the text bold */
+        font-size: 16px; /* Match the font size */
+        border-top: 1px solid #d0d0d0; /* Add a top border for the Aarbeidsloon rows */
+        border-bottom: 1px solid #d0d0d0; /* Add a bottom border for the Aarbeidsloon rows */
+      }
+
+      /* Remove bold styling from the last cell in Aarbeidsloon row */
+      .aarbeidsloon-row td:last-child {
+        font-weight: normal; /* Make the text normal (not bold) */
+      }
+
+     @media print {
+        footer {
+          display: none; /* Hide the print button in print view */
+        }
+
+        /* Ensure background colors are printed */
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+
+    </style>
+    
+    
+  </head>
+  <body>
+    <center>
+      <br>
+      <!-- Applying the CSS class to the div -->
+      <div  id = "data" class="invoice-container">
+        <table>
+          <tr>
+            <td align="left"><img src="" alt="Invoice Image"></td>
+            <td align="right"><b class="invoice-header">Factuur</b></td> <!-- "Invoice" will have a larger font size -->
+          </tr>
+          <tr>
+            <td align="left"><b>Datum</b>: 19-01-2025</td>
+            <td align="right"><b>Factuurnr:</b> 1234567</td>
+          </tr>
+          <tr>
+            <td align="left" valign = top><b>Factuur aan:</b><br> Taxi ABC <br> Centrum 25 <br> 1055 RV Amsterdam</td>
+            <td align="right" valign= top><b>Pay To: </b><br>S&A Car Control <br> Den Bilenstraat 12 <br> 1234 AA Amsterdam <br>KvK: 123333333<br>BTW-nr: 2323232<br>IBAN: 232323232<br>Telnr: 020-1222 3334</td>
+          </tr>
+        </table>
+
+        <br>
+        <!-- Second Table with outer borders only -->
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <td><strong>Referentie</strong></td>
+              <td><strong>Omschrijving</strong></td>
+              <td><strong>Aantal</strong></td>
+              <td><strong>Prijs</strong></td>
+              <td align="right"><strong>Subtotaal</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01</td>
+              <td>REMBLOCK</td>
+              <td>10</td>
+              <td>€ 10.00</td>
+              <td align="right">€ 100.00</td>
+            </tr>
+            <tr>
+              <td>02</td>
+              <td>WIELSCHIJF </td>
+              <td>1</td>
+              <td>€ 10.00</td>
+              <td align="right">€10.00</td>
+            </tr>
+            <tr>
+              <td>03</td>
+              <td>AUTOBAND</td>
+              <td>40</td>
+              <td>€ 1.00</td>
+              <td align="right">€ 450.00</td>
+            </tr>
+            <!-- Aarbeidsloon row with matching style -->
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>Aarbeidsloon</b></td>
+              <td align="right">€ 455.00</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>Subtotaal</b></td>
+              <td align="right">€ 455.00</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>BTW</b></td>
+              <td align="right">% 21</td>
+            </tr>
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>BTW Bedrag</b></td>
+              <td align="right">€ 21.90</td>
+            </tr
+            <tr class="aarbeidsloon-row">
+              <td colspan="4" align="right"><b>Totaal</b></td>
+              <td align="right"><b>€ 211.90</b></td>
+            </tr>
+          </tbody>
+        </table>
+        <footer>
+    <div> 
+        <a href="javascript:void(0);" onclick="window.print()">Print & Download</a> 
+    </div>
+</footer>
+      </div>
+    </center>
+  </body>
+</html>
+<div>

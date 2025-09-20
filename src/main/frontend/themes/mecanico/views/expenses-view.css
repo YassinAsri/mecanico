@@ -1,0 +1,4 @@
+.header-gray-background-grid::part(header-cell) {
+    background-color: #e0f7fa; 
+    color: gray;
+}
