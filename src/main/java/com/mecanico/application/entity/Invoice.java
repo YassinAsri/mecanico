@@ -40,6 +40,6 @@ public class Invoice {
     private double priceIncBtw;
     private double btwPercentage;
     private double btwPrice;
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.EAGER,  orphanRemoval = true)
     private List<Reference> references = new ArrayList<>();
 }

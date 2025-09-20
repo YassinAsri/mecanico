@@ -14,43 +14,34 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.Menu;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.springframework.context.annotation.Scope;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import org.springframework.context.annotation.Scope;
-
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
+import java.util.*;
 
 @PageTitle("Factuur")
 @Route("invoice1/:invoiceId?/:action?(edit)")
 @Menu(order = 5, icon = LineAwesomeIconUrl.SELLCAST)
 @Scope("prototype")
 @VaadinSessionScope
-public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver {
+public class InvoiceView extends VerticalLayout implements BeforeEnterObserver {
 
     private final ClientService clientService;
     private final InvoiceService invoiceService;
@@ -60,7 +51,7 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
     // Form fields for invoice details
     private final DateTimePicker dateField = new DateTimePicker("Factuur datum");
     private final TextField invoiceNr = new TextField("Factuur nr");
-    private final ComboBox<Client> clientComboBox = new ComboBox<>("Client");
+    private final ComboBox<Client> clientComboBox = new ComboBox<>("Klant");
     private final TextField plateNr = new TextField("Kenteken");
     private final TextField email = new TextField("Email");
     private final TextField type = new TextField("Type/Model");
@@ -87,17 +78,17 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
     private final Button emailButton = new Button("Factuur");
     private final Button cancelButton = new Button("Annuleren");
 
-    private Invoice currentInvoice;
+    private Invoice invoiceEntity;
     private List<String> distinctReferences;
 
     // Initially empty list of references
-    public InvoiceView1(ClientService clientService, InvoiceService invoiceService, ReferenceService referenceService, EmailService emailService) {
+    public InvoiceView(ClientService clientService, InvoiceService invoiceService, ReferenceService referenceService, EmailService emailService) {
         this.clientService = clientService;
         this.invoiceService = invoiceService;
         this.referenceService = referenceService;
         this.emailService = emailService;
 
-        distinctReferences = this.referenceService.getReferences();        
+        distinctReferences = this.referenceService.getReferences();
         setSizeFull();
 
         FormLayout invoiceForm = createGeneralInvoicePane();
@@ -112,28 +103,28 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
         try {
             if (event.getRouteParameters() != null && event.getRouteParameters().get("invoiceId") != null && event.getRouteParameters().get("invoiceId").isPresent()) {
                 invoiceNr.setValue(event.getRouteParameters().get("invoiceId").get());
-                currentInvoice = invoiceService.findById(Long.parseLong(event.getRouteParameters().get("invoiceId").get()));
+                invoiceEntity = invoiceService.findById(Long.parseLong(event.getRouteParameters().get("invoiceId").get()));
                 dateField.setLocale(new java.util.Locale("nl", "NL"));
-                dateField.setValue(currentInvoice.getDate());
-                telNr.setValue(currentInvoice.getClient().getPhoneNr());
-                email.setValue(currentInvoice.getClient().getEmail());
-                km.setValue(currentInvoice.getKm());
-                plateNr.setValue(currentInvoice.getPlateNr());
-                type.setValue(currentInvoice.getType());
-                clientComboBox.setValue(currentInvoice.getClient());
-                for (int i = 0; i < currentInvoice.getReferences().size(); i++) {
-                    refIdFields[i + 1].setValue(String.valueOf(currentInvoice.getReferences().get(i).getId()));
-                    refNameFields[i + 1].setValue(currentInvoice.getReferences().get(i).getReference());
-                    refDescFields[i + 1].setValue(currentInvoice.getReferences().get(i).getName());
-                    refNumberFields[i + 1].setValue(String.valueOf(currentInvoice.getReferences().get(i).getNumber()));
-                    refPriceFields[i + 1].setValue(String.valueOf(currentInvoice.getReferences().get(i).getPrice()));
-                    refSubTotFields[i + 1].setValue(String.valueOf(currentInvoice.getReferences().get(i).getSubtotal()));
+                dateField.setValue(invoiceEntity.getDate());
+                telNr.setValue(invoiceEntity.getClient().getPhoneNr());
+                email.setValue(invoiceEntity.getClient().getEmail());
+                km.setValue(invoiceEntity.getKm());
+                plateNr.setValue(invoiceEntity.getPlateNr());
+                type.setValue(invoiceEntity.getType());
+                clientComboBox.setValue(invoiceEntity.getClient());
+                for (int i = 0; i < invoiceEntity.getReferences().size(); i++) {
+                    refIdFields[i + 1].setValue(String.valueOf(invoiceEntity.getReferences().get(i).getId()));
+                    refNameFields[i + 1].setValue(invoiceEntity.getReferences().get(i).getReference());
+                    refDescFields[i + 1].setValue(invoiceEntity.getReferences().get(i).getName());
+                    refNumberFields[i + 1].setValue(String.valueOf(invoiceEntity.getReferences().get(i).getNumber()));
+                    refPriceFields[i + 1].setValue(String.valueOf(invoiceEntity.getReferences().get(i).getPrice()));
+                    refSubTotFields[i + 1].setValue(String.valueOf(invoiceEntity.getReferences().get(i).getSubtotal()));
                 }
-                priceExBtw.setValue(String.format(Locale.US, "%.2f", currentInvoice.getPriceExBtw()));
-                btwAmount.setValue(String.format(Locale.US, "%.2f", currentInvoice.getPriceExBtw() * 21 / 100));
-                priceIncBtw.setValue(String.format(Locale.US, "%.2f", currentInvoice.getPriceIncBtw()));
-                workAmount.setValue(String.format(Locale.US, "%.2f", currentInvoice.getWorkAmount()));
-                btw.setValue(String.format(Locale.US, "%.2f", currentInvoice.getBtwPercentage()));
+                priceExBtw.setValue(String.format(Locale.US, "%.2f", invoiceEntity.getPriceExBtw()));
+                btwAmount.setValue(String.format(Locale.US, "%.2f", invoiceEntity.getPriceExBtw() * 21 / 100));
+                priceIncBtw.setValue(String.format(Locale.US, "%.2f", invoiceEntity.getPriceIncBtw()));
+                workAmount.setValue(String.format(Locale.US, "%.2f", invoiceEntity.getWorkAmount()));
+                btw.setValue(String.format(Locale.US, "%.2f", invoiceEntity.getBtwPercentage()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,7 +158,7 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
 
     private String readFileFromTemplate(String template) {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(template);
-        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             StringBuilder content = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -184,30 +175,30 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
         String main = readFileFromTemplate("template/invoice_main.html");
         String invoiceRef = readFileFromTemplate("template/invoice_ref.html");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String formattedDate = currentInvoice.getDate().format(formatter);
+        String formattedDate = invoiceEntity.getDate().format(formatter);
         main = main.replace("$DATE", formattedDate);
-        main = main.replace("$INV_NR", String.valueOf(currentInvoice.getId()));
-        main = main.replace("$CLIENT_NAME", currentInvoice.getClient().getName());
-        main = main.replace("$CLIENT_ADDRESS", currentInvoice.getClient().getAddress());
-        main = main.replace("$CLIENT_PC", currentInvoice.getClient().getZip() + " " + currentInvoice.getClient().getCity());
+        main = main.replace("$INV_NR", String.valueOf(invoiceEntity.getId()));
+        main = main.replace("$CLIENT_NAME", invoiceEntity.getClient().getName());
+        main = main.replace("$CLIENT_ADDRESS", invoiceEntity.getClient().getAddress());
+        main = main.replace("$CLIENT_PC", invoiceEntity.getClient().getZip() + " " + invoiceEntity.getClient().getCity());
 
         String refContent = "";
-        for (Reference reference : currentInvoice.getReferences()) {
+        for (Reference referenceEntity : invoiceEntity.getReferences()) {
             String ref = new String(invoiceRef);
-            ref = ref.replace("$REF", reference.getReference());
-            ref = ref.replace("$DES", reference.getName());
-            ref = ref.replace("$NUMBER", String.valueOf(reference.getNumber()));
-            ref = ref.replace("$PRICE", String.format(Locale.US, "%.2f", reference.getPrice()));
-            ref = ref.replace("$SUB", String.format(Locale.US, "%.2f", reference.getSubtotal()));
+            ref = ref.replace("$REF", referenceEntity.getReference());
+            ref = ref.replace("$DES", referenceEntity.getName());
+            ref = ref.replace("$NUMBER", String.valueOf(referenceEntity.getNumber()));
+            ref = ref.replace("$PRICE", String.format(Locale.US, "%.2f", referenceEntity.getPrice()));
+            ref = ref.replace("$SUB", String.format(Locale.US, "%.2f", referenceEntity.getSubtotal()));
             refContent += ref;
         }
 
         main = main.replace("$INV_REF", refContent);
-        main = main.replace("$LOON", String.format(Locale.US, "%.2f", currentInvoice.getWorkAmount()));
-        main = main.replace("$SUBTOTAL", String.format(Locale.US, "%.2f", currentInvoice.getPriceExBtw()));
-        main = main.replace("$BTW_PERC", String.format(Locale.US, "%.2f", currentInvoice.getBtwPercentage()));
-        main = main.replace("$BTW_AMOUNT", String.format(Locale.US, "%.2f", currentInvoice.getBtwPrice()));        
-        main = main.replace("$TOTAL", String.format(Locale.US, "%.2f", currentInvoice.getPriceIncBtw()));
+        main = main.replace("$LOON", String.format(Locale.US, "%.2f", invoiceEntity.getWorkAmount()));
+        main = main.replace("$SUBTOTAL", String.format(Locale.US, "%.2f", invoiceEntity.getPriceExBtw()));
+        main = main.replace("$BTW_PERC", String.format(Locale.US, "%.2f", invoiceEntity.getBtwPercentage()));
+        main = main.replace("$BTW_AMOUNT", String.format(Locale.US, "%.2f", invoiceEntity.getBtwPrice()));
+        main = main.replace("$TOTAL", String.format(Locale.US, "%.2f", invoiceEntity.getPriceIncBtw()));
 
         createDialog(main);
     }
@@ -250,9 +241,9 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
 
     private void email(String content) {
         try {
-            emailService.sendEmail(currentInvoice.getClient().getEmail(), "INVOICE", content);
+            emailService.sendEmail(invoiceEntity.getClient().getEmail(), "INVOICE", content);
             Notification.show("Email is verzonden.", 3000, Notification.Position.MIDDLE);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Notification.show("Fout. Email is niet verzonden " + e.getMessage(), 3000, Notification.Position.MIDDLE);
         }
     }
@@ -319,7 +310,7 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
             refDescFields[i].setItems(distinctReferences);
             refDescFields[i].setAllowCustomValue(true);
             final int index = i;
-            refDescFields[i].addCustomValueSetListener(event -> {   
+            refDescFields[i].addCustomValueSetListener(event -> {
                 refDescFields[index].setValue(event.getDetail());
             });
             refNumberFields[i] = new TextField();
@@ -355,7 +346,7 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
                 refPriceFields[i].setEnabled(false);
                 refPriceFields[i].getElement().getStyle().set("background-color", "#e0f7fa");
 
-                refSubTotFields[i].setValue("SUBTOTAAL (€) "); // Make Sub Total take the remaining width 
+                refSubTotFields[i].setValue("SUBTOTAAL (€) "); // Make Sub Total take the remaining width
                 refSubTotFields[i].setEnabled(false);
                 refSubTotFields[i].getElement().getStyle().set("background-color", "#e0f7fa");
             } else {
@@ -443,10 +434,10 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
         clientComboBox.setItems(clientService.findAll());
         clientComboBox.setItemLabelGenerator(Client::getName);
         clientComboBox.addValueChangeListener(event -> {
-            Client selectedClient = event.getValue();
-            if (selectedClient != null) {
-                email.setValue(selectedClient.getEmail());
-                telNr.setValue(selectedClient.getPhoneNr());
+            Client selectedClientEntity = event.getValue();
+            if (selectedClientEntity != null) {
+                email.setValue(selectedClientEntity.getEmail());
+                telNr.setValue(selectedClientEntity.getPhoneNr());
             } else {
                 email.clear();
                 telNr.clear();
@@ -485,64 +476,92 @@ public class InvoiceView1 extends VerticalLayout implements BeforeEnterObserver 
         try {
             String validation = validate();
             if (validation != null) {
-                Notification.show("Please fill in all fields." + validation, 3000, Notification.Position.BOTTOM_START);
+                Notification.show("Please fill in all fields.\n" + validation, 3000, Notification.Position.BOTTOM_START);
                 return;
             }
 
-            if (currentInvoice == null) {
-                currentInvoice = new Invoice();
+            if (invoiceEntity == null) {
+                invoiceEntity = new Invoice();
             }
 
-            currentInvoice.setClient(clientComboBox.getValue());
-            currentInvoice.setDate(dateField.getValue());
-            currentInvoice.setPlateNr(plateNr.getValue());
-            currentInvoice.setType(type.getValue());
-            currentInvoice.setKm(km.getValue());
-            currentInvoice.setDescription(workDesc.getValue());
-            currentInvoice.setPriceExBtw(Double.parseDouble(priceExBtw.getValue()));
-            currentInvoice.setPriceIncBtw(Double.parseDouble(priceIncBtw.getValue()));
-            currentInvoice.setWorkAmount(Double.parseDouble(workAmount.getValue()));
-            currentInvoice.setBtwPercentage(Double.parseDouble(btw.getValue()));
-            currentInvoice.setBtwPrice(Double.parseDouble(btwAmount.getValue()));
+            // Set general invoice fields
+            invoiceEntity.setClient(clientComboBox.getValue());
+            invoiceEntity.setDate(dateField.getValue());
+            invoiceEntity.setPlateNr(plateNr.getValue());
+            invoiceEntity.setType(type.getValue());
+            invoiceEntity.setKm(km.getValue());
+            invoiceEntity.setDescription(workDesc.getValue());
+            invoiceEntity.setPriceExBtw(Double.parseDouble(priceExBtw.getValue()));
+            invoiceEntity.setPriceIncBtw(Double.parseDouble(priceIncBtw.getValue()));
+            invoiceEntity.setWorkAmount(Double.parseDouble(workAmount.getValue()));
+            invoiceEntity.setBtwPercentage(Double.parseDouble(btw.getValue()));
+            invoiceEntity.setBtwPrice(Double.parseDouble(btwAmount.getValue()));
+
+            // Step 1: Identify deleted references
+            Set<Long> deletedRefIds = new HashSet<>();
             for (int i = 1; i < nrOfFields; i++) {
-                if (refNameFields[i].getValue() == null || refNameFields[i].getValue().trim().equals("")) {
-                    continue;
+                String refIdStr = refIdFields[i].getValue();
+                String refName = refNameFields[i].getValue();
+                if (refIdStr != null && !refIdStr.trim().isEmpty() && (refName == null || refName.trim().isEmpty())) {
+                    deletedRefIds.add(Long.parseLong(refIdStr.trim()));
                 }
-                Reference reference;
-                if (currentInvoice == null || i > currentInvoice.getReferences().size()) {
-                    reference = new Reference();
-                    currentInvoice.getReferences().add(reference);
-                } else {
-                    reference = currentInvoice.getReferences().get(i - 1);
-                }
-                reference.setInvoice(currentInvoice);
-                if (refIdFields[i].getValue() != null && !refIdFields[i].getValue().trim().equals("")) {
-                    reference.setId(Long.parseLong(refIdFields[i].getValue().trim()));
-                }
-                reference.setName(refDescFields[i].getValue());
-                reference.setReference(refNameFields[i].getValue());
-                reference.setNumber(Integer.parseInt(refNumberFields[i].getValue().trim()));
-                reference.setPrice(Double.parseDouble(refPriceFields[i].getValue().trim()));
-                reference.setSubtotal(Double.parseDouble(refSubTotFields[i].getValue().trim()));
-
             }
 
-            currentInvoice = invoiceService.save(currentInvoice);
-            invoiceNr.setValue(String.valueOf(currentInvoice.getId()));
+            // Step 2: Remove deleted references
+            if (invoiceEntity.getReferences() != null) {
+                invoiceEntity.getReferences().removeIf(ref -> deletedRefIds.contains(ref.getId()));
+            }
+
+            // Step 3: Add/update remaining references
+            List<Reference> updatedReferences = new ArrayList<>();
+            for (int i = 1; i < nrOfFields; i++) {
+                String refName = refNameFields[i].getValue();
+                if (refName == null || refName.trim().isEmpty()) {
+                    continue; // Skip empty rows
+                }
+
+                Reference referenceEntity;
+
+                String refIdStr = refIdFields[i].getValue();
+                if (refIdStr != null && !refIdStr.trim().isEmpty()) {
+                    Long refId = Long.parseLong(refIdStr.trim());
+                    // Try to find existing reference
+                    referenceEntity = invoiceEntity.getReferences().stream()
+                            .filter(r -> r.getId().equals(refId))
+                            .findFirst()
+                            .orElse(new Reference());
+                    referenceEntity.setId(refId);
+                } else {
+                    referenceEntity = new Reference();
+                }
+
+                referenceEntity.setInvoice(invoiceEntity);
+                referenceEntity.setName(refDescFields[i].getValue());
+                referenceEntity.setReference(refNameFields[i].getValue());
+                referenceEntity.setNumber(Integer.parseInt(refNumberFields[i].getValue().trim()));
+                referenceEntity.setPrice(Double.parseDouble(refPriceFields[i].getValue().trim()));
+                referenceEntity.setSubtotal(Double.parseDouble(refSubTotFields[i].getValue().trim()));
+
+                updatedReferences.add(referenceEntity);
+            }
+
+            invoiceEntity.setReferences(updatedReferences);
+
+            // Step 4: Save invoice
+            invoiceEntity = invoiceService.save(invoiceEntity);
+            invoiceNr.setValue(String.valueOf(invoiceEntity.getId()));
             Notification.show("Invoice saved successfully!", 3000, Notification.Position.BOTTOM_START);
-            updateGrid(currentInvoice.getReferences());
 
         } catch (Exception e) {
             e.printStackTrace();
-            Notification.show("Fout tijden opslaan " + e.getMessage(), 3000, Notification.Position.BOTTOM_START);
+            Notification.show("Error saving invoice: " + e.getMessage(), 3000, Notification.Position.BOTTOM_START);
         }
     }
 
-    private void updateGrid(List<Reference> references) {
 
-        // Example logic for displaying invoices (can be customized)
-        // List<Invoice> invoices = invoiceService.findAll(); 
-        // referenceGrid.setItems(invoices); // Set items in the grid (add a proper list of invoices if necessary)
+
+    private void updateGrid(List<Reference> referenceEntities) {
+        // the refIds in the grid should be populated with the right ones after the save operation
     }
 
 }
